@@ -1081,7 +1081,7 @@ func opListEpisodes(token string) {
 		}
 	}
 	limit := 200
-	if s := opt("max_rows"); s != "" {
+	if s := opt("max-rows"); s != "" {
 		limit = w.Check(strconv.Atoi(s))
 	}
 	pf("# %s (%s)\n# %d of %d known episodes match; %d of those archived\n", pods[0].Title, pods[0].UUID, len(sel), len(eps), archived)
@@ -1089,7 +1089,7 @@ func opListEpisodes(token string) {
 	pf("number\tpublished\tstate\tuuid\ttitle\n")
 	for i, e := range sel {
 		if i == limit {
-			pf("[%d more rows not shown; raise max_rows or narrow the filter]\n", len(sel)-limit)
+			pf("[%d more rows not shown; raise max-rows or narrow the filter]\n", len(sel)-limit)
 			break
 		}
 		pf("%s\n", episodeRow(e))
