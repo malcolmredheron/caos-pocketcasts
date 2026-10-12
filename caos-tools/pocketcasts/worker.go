@@ -813,14 +813,13 @@ func opSearch() {
 	defer resp.Body.Close()
 	data := w.Check(io.ReadAll(io.LimitReader(resp.Body, 8<<20)))
 	w.True(resp.StatusCode == 200, "pocketcasts: search failed: HTTP %d: %s (this endpoint is unverified; the podcast uuid is also in a podcast's pca.st / pocketcasts.com share URL)", resp.StatusCode, snippet(data))
-	var raw struct {
-		Result struct {
-			Podcasts []map[string]any `json:"podcasts"`
-		} `json:"result"`
-		Podcasts []map[string]any `json:"podcasts"`
-	}
+	var raw any
 	w.Must(json.Unmarshal(data, &raw))
-	list := append(raw.Result.Podcasts, raw.Podcasts...)
+	var list []map[string]any
+	collectPodcasts(raw, &list)
+	if len(list) == 0 {
+		pf("# raw response (no podcasts recognised): %s\n", snippet(data))
+	}
 	pf("# %d results for %q\nuuid\ttitle\tauthor\n", len(list), q)
 	for _, m := range list {
 		pf("%s\t%s\t%s\n", gs(m, "uuid"), gs(m, "title"), gs(m, "author"))
