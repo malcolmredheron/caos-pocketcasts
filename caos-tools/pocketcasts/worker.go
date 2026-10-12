@@ -661,10 +661,10 @@ func episodesOf(token, podcast string) (meta, []episode) {
 	w.True(err == nil, "pocketcasts: reading the episode list of %s failed: %v", podcast, err)
 	state := fetchState(token, podcast)
 	var custom *regexp.Regexp
-	if s := opt("number_regex"); s != "" {
+	if s := opt("number-regex"); s != "" {
 		c, err := regexp.Compile(s)
-		w.True(err == nil, "pocketcasts: number_regex: %v", err)
-		w.True(c.NumSubexp() >= 1, "pocketcasts: number_regex needs a capture group around the number")
+		w.True(err == nil, "pocketcasts: number-regex: %v", err)
+		w.True(c.NumSubexp() >= 1, "pocketcasts: number-regex needs a capture group around the number")
 		custom = c
 	}
 	eps := m.Episodes
