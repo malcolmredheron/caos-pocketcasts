@@ -1,0 +1,5 @@
+# The root expression of this caos client repo: mount caos' `std/` into THIS
+# tree's evaluation result so everything below can name `caos-std/<entry>`.
+# Same as the template client repo; ONE LINE, no continuations. Both revs must
+# equal what flake.lock locks for `--input=caos`.
+run --base:@@=github:Metta-AI/caos?rev=74d72c8f5a66a9fb81b580033b8aa24242712a76&dir=std/flake-input-loader --in:@=. --expr=$CAOS_EXPR --input=caos --input-tree:@@=github:Metta-AI/caos?rev=74d72c8f5a66a9fb81b580033b8aa24242712a76&dir=std --output-path=caos-std
