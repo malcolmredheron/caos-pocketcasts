@@ -853,7 +853,7 @@ func opListPodcasts(token string) {
 		pods = keep
 	}
 	pods = sortedPods(pods)
-	withLatest := truthy(opt("with_latest"))
+	withLatest := truthy(opt("with-latest"))
 	metas := make([]meta, len(pods))
 	errs := make([]error, len(pods))
 	if withLatest {
