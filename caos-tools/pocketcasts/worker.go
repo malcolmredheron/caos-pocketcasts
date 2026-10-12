@@ -826,6 +826,25 @@ func opSearch() {
 	}
 }
 
+// collectPodcasts finds every object with a uuid and a title anywhere in a
+// response, so the search tolerates whatever envelope the endpoint uses.
+func collectPodcasts(v any, into *[]map[string]any) {
+	switch x := v.(type) {
+	case map[string]any:
+		if gs(x, "uuid") != "" && gs(x, "title") != "" {
+			*into = append(*into, x)
+			return
+		}
+		for _, c := range x {
+			collectPodcasts(c, into)
+		}
+	case []any:
+		for _, c := range x {
+			collectPodcasts(c, into)
+		}
+	}
+}
+
 func sortedPods(pods []pod) []pod {
 	pods = append([]pod(nil), pods...)
 	sort.SliceStable(pods, func(i, j int) bool {
