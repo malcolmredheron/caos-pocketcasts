@@ -27,7 +27,7 @@ user that description and get their go-ahead before repeating the call with it.
 @param [number-regex] Regex with one capture group that extracts the episode number from the title, overriding the default parsing.
 @param [title-regex] Only episodes whose title matches this regex (Go syntax, add (?i) for case-insensitive).
 @param [published-after] Only episodes published on or after this date, YYYY-MM-DD.
-@param [published_before] Only episodes published before this date, YYYY-MM-DD.
+@param [published-before] Only episodes published before this date, YYYY-MM-DD.
 @param [only] list_episodes: archived or unarchived.
 @param [episodes] Only these episode uuids, comma-separated.
 @param [all] archive, unarchive: true to select every episode when no filter is given.
