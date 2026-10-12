@@ -977,10 +977,9 @@ func opUnsubscribe(token string) {
 		pf("\nDRY RUN: nothing changed. Confirm the list with the user, then re-run with apply=true.\n")
 		return
 	}
-	no := false
 	var recs [][]byte
 	for _, p := range pods {
-		recs = append(recs, podcastRec(p.UUID, &no, nil, nil))
+		recs = append(recs, unsubscribeRec(p.UUID))
 	}
 	syncUpdate(token, recs)
 	after := fetchLibrary(token)
