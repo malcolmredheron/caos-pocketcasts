@@ -714,9 +714,9 @@ type filter struct {
 
 func parseFilter() filter {
 	var f filter
-	if s := opt("from_number"); s != "" {
+	if s := opt("from-number"); s != "" {
 		n, err := strconv.Atoi(s)
-		w.True(err == nil, "pocketcasts: from_number must be an integer, not %q", s)
+		w.True(err == nil, "pocketcasts: from-number must be an integer, not %q", s)
 		f.from, f.hasFrom, f.any = n, true, true
 	}
 	if s := opt("to_number"); s != "" {
@@ -1110,7 +1110,7 @@ func opArchive(token string, archived bool) {
 	w.True(len(pods) == 1, "pocketcasts: %s takes one podcast", verb)
 	p := pods[0]
 	f := parseFilter()
-	w.True(f.any || truthy(opt("all")), "pocketcasts: refusing to %s every episode by default: add a filter (from_number/to_number, title_regex, published_after/published_before, episodes) or all=true", verb)
+	w.True(f.any || truthy(opt("all")), "pocketcasts: refusing to %s every episode by default: add a filter (from-number/to_number, title_regex, published_after/published_before, episodes) or all=true", verb)
 	m, eps := episodesOf(token, p.UUID)
 	var matched, todo []episode
 	for _, e := range eps {
