@@ -144,12 +144,19 @@ func login() string {
 	body := w.Check(json.Marshal(map[string]string{"email": email, "password": password, "scope": "mobile"}))
 	code, data := apiCall("/user/login_pocket_casts", "application/json", "", body)
 	w.True(code == 200, "pocketcasts: login failed: HTTP %d: %s", code, snippet(data))
-	var r struct {
-		Token string `json:"token"`
+	var r map[string]any
+	w.True(json.Unmarshal(data, &r) == nil, "pocketcasts: login response is not a JSON object")
+	if t := gs(r, "accessToken", "token", "access_token"); t != "" {
+		return t
 	}
-	w.Must(json.Unmarshal(data, &r))
-	w.True(r.Token != "", "pocketcasts: login returned no token")
-	return r.Token
+	// Names only, never values: the response holds credentials.
+	var keys []string
+	for k := range r {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	w.True(false, "pocketcasts: login returned no token; response fields: %s", strings.Join(keys, ", "))
+	return ""
 }
 
 // ---- protobuf ------------------------------------------------------------
