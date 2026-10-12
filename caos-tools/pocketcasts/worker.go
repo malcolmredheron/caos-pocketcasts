@@ -1286,7 +1286,7 @@ func main() {
 		default:
 			w.True(false, "pocketcasts: unknown op %q; see tool_help", op)
 		}
-		body := out.String()
+		body := scrub(out.String())
 		if len(body) > maxBody {
 			cut := maxBody
 			for cut > 0 && body[cut]&0xC0 == 0x80 {
