@@ -42,6 +42,7 @@ import (
 const (
 	apiHost    = "https://api.pocketcasts.com"
 	metaHost   = "https://podcast-api.pocketcasts.com"
+	mainHost   = "https://refresh.pocketcasts.com" // the Android app's SERVER_MAIN_URL
 	homeFolder = "00000000-0000-0000-0000-000000000000" // "no folder"
 	maxBody    = 100_000
 	batchSize  = 100 // records per sync/update request
