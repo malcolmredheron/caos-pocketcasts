@@ -16,7 +16,7 @@ archive, unarchive) only describe what they would do until apply=true: show the
 user that description and get their go-ahead before repeating the call with it.
 
 @param op One of: list_podcasts, list_folders, search, subscribe, unsubscribe, move_podcast, create_folder, rename_folder, delete_folder, list_episodes, archive, unarchive, selftest (offline check of the protobuf encoder).
-@param [podcast] A podcast: its uuid, or part of its title (must match exactly one subscribed podcast, or exactly one by full title). unsubscribe and move_podcast take several, comma-separated. subscribe takes uuids only.
+@param [podcast] A podcast: its uuid, or part of its title (must match exactly one subscribed podcast, or exactly one by full title). unsubscribe and move_podcast take several, comma-separated. subscribe takes uuids or feed URLs (private feeds included), comma-separated.
 @param [folder] A folder: its uuid or name, or none for no folder. list_podcasts: only that folder's podcasts. move_podcast: the destination. subscribe: put the new podcast there. rename_folder, delete_folder: the folder.
 @param [name] create_folder: the new folder's name. rename_folder: its new name.
 @param [color] create_folder: an integer color index (default 0).
