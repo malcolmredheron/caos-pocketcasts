@@ -816,8 +816,58 @@ func episodeRow(e episode) string {
 
 // ---- operations ----------------------------------------------------------
 
+// resolveFeedURL turns a feed URL (a private one included) into the podcast's
+// Pocket Casts uuid, the way the Android app's "search by URL" does: a form
+// POST to the main server's /podcasts/search. A feed Pocket Casts has not seen
+// yet answers status "poll" while the server fetches it, so ask again.
+func resolveFeedURL(feed string) (string, string) {
+	form := url.Values{"q": {feed}, "v": {"1.7"}, "dt": {"2"}, "scope": {"mobile"}}
+	for attempt := 1; attempt <= 12; attempt++ {
+		req := w.Check(http.NewRequest("POST", mainHost+"/podcasts/search", strings.NewReader(form.Encode())))
+		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+		req.Header.Set("User-Agent", "caos-pocketcasts")
+		resp, err := pubClient.Do(req)
+		w.True(err == nil, "pocketcasts: resolving %s got no response: %v", feed, err)
+		data := w.Check(io.ReadAll(io.LimitReader(resp.Body, 8<<20)))
+		resp.Body.Close()
+		w.True(resp.StatusCode == 200, "pocketcasts: resolving %s failed: HTTP %d: %s", feed, resp.StatusCode, snippet(data))
+		var r struct {
+			Status  string `json:"status"`
+			Message string `json:"message"`
+			Result  struct {
+				Podcast struct {
+					UUID  string `json:"uuid"`
+					Title string `json:"title"`
+				} `json:"podcast"`
+			} `json:"result"`
+		}
+		w.True(json.Unmarshal(data, &r) == nil, "pocketcasts: resolving %s: response is not JSON: %s", feed, snippet(data))
+		switch r.Status {
+		case "ok":
+			w.True(r.Result.Podcast.UUID != "", "pocketcasts: Pocket Casts found no podcast at %s: %s", feed, snippet(data))
+			return r.Result.Podcast.UUID, r.Result.Podcast.Title
+		case "poll":
+			time.Sleep(5 * time.Second)
+		default:
+			w.True(false, "pocketcasts: resolving %s failed: status %q: %s", feed, r.Status, r.Message)
+		}
+	}
+	w.True(false, "pocketcasts: Pocket Casts was still fetching %s after a minute; try again shortly", feed)
+	return "", ""
+}
+
+func isURL(s string) bool {
+	l := strings.ToLower(s)
+	return strings.HasPrefix(l, "http://") || strings.HasPrefix(l, "https://")
+}
+
 func opSearch() {
 	q := required("query")
+	if isURL(q) {
+		uuid, title := resolveFeedURL(q)
+		pf("# feed %s\nuuid\ttitle\n%s\t%s\n", q, uuid, title)
+		return
+	}
 	body := w.Check(json.Marshal(map[string]string{"term": q}))
 	req := w.Check(http.NewRequest("POST", metaHost+"/discover/search", bytes.NewReader(body)))
 	req.Header.Set("Content-Type", "application/json")
