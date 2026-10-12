@@ -25,7 +25,7 @@ user that description and get their go-ahead before repeating the call with it.
 @param [from-number] list_episodes, archive, unarchive: lowest episode number to include. Numbers come from the feed if it has them, else are parsed from the title ("#102", "Episode 102", a leading number); see number-regex. Episodes with no number never match a number filter.
 @param [to-number] Highest episode number to include (inclusive).
 @param [number-regex] Regex with one capture group that extracts the episode number from the title, overriding the default parsing.
-@param [title_regex] Only episodes whose title matches this regex (Go syntax, add (?i) for case-insensitive).
+@param [title-regex] Only episodes whose title matches this regex (Go syntax, add (?i) for case-insensitive).
 @param [published_after] Only episodes published on or after this date, YYYY-MM-DD.
 @param [published_before] Only episodes published before this date, YYYY-MM-DD.
 @param [only] list_episodes: archived or unarchived.
