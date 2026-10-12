@@ -1196,13 +1196,12 @@ func opSelftest() {
 		{"varint 300", binary.AppendUvarint(nil, 300), "ac02"},
 		{"subscribe", podcastRec("ab", &yes, nil, nil), "0a080a026162" + "1a020801"},
 		{"unsubscribe (empty BoolValue)", podcastRec("ab", &no, nil, nil), "0a060a026162" + "1a00"},
-		{"folder wrapper", podcastRec("ab", nil, &home, nil), "0a080a026162" + "3a030a0178"},
-		{"episode archived", episodeRec("p", "e", true, 1), "12" + "0e" + "0a0165" + "12017" + "0" + "1a020801" + "22020801"},
-		{"folder delete", folderRec(fold{UUID: "f"}, true, nil), "2a06" + "0a0166" + "1001"},
+		{"folder wrapper", podcastRec("ab", nil, &home, nil), "0a09" + "0a026162" + "3a030a0178"},
+		// uuid "e", podcast_uuid "p", is_deleted true, is_deleted_modified 1
+		{"episode archived", episodeRec("p", "e", true, 1), "120e" + "0a0165" + "120170" + "1a020801" + "22020801"},
+		// Record.folder (field 5): folder_uuid "f", is_deleted true
+		{"folder delete", folderRec(fold{UUID: "f"}, true, nil), "2a05" + "0a0166" + "1001"},
 	}
-	// The episode case is assembled from pieces above; recompute its want from
-	// the field layout: uuid "e", podcast_uuid "p", is_deleted true, modified 1.
-	cases[4].want = "120e" + "0a0165" + "120170" + "1a020801" + "22020801"
 	bad := 0
 	for _, c := range cases {
 		got := hex.EncodeToString(c.got)
