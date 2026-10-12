@@ -32,7 +32,7 @@ user that description and get their go-ahead before repeating the call with it.
 @param [episodes] Only these episode uuids, comma-separated.
 @param [all] archive, unarchive: true to select every episode when no filter is given.
 @param [apply] unsubscribe, delete_folder, archive, unarchive: true to do it. Without it the call is a dry run.
-@param [max_rows] list_episodes: rows to print (default 200).
+@param [max-rows] list_episodes: rows to print (default 200).
 @call
 END
 curry --base:@@=github:Metta-AI/caos?rev=74d72c8f5a66a9fb81b580033b8aa24242712a76&dir=std/go --worker1:@=worker.go --help=$HELP
