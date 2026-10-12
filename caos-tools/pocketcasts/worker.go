@@ -991,7 +991,13 @@ func opSubscribe(token string) {
 	yes := true
 	for _, u := range strings.Split(required("podcast"), ",") {
 		u = strings.TrimSpace(u)
-		w.True(uuidRe.MatchString(u), "pocketcasts: subscribe takes podcast uuids (use search to find one), not %q", u)
+		if isURL(u) {
+			feed := u
+			var title string
+			u, title = resolveFeedURL(feed)
+			pf("feed %s is %s  %s\n", feed, u, title)
+		}
+		w.True(uuidRe.MatchString(u), "pocketcasts: subscribe takes podcast uuids or feed URLs (use search to find one), not %q", u)
 		if _, ok := lib.pod(u); ok {
 			pf("already subscribed: %s\n", u)
 			continue
