@@ -729,7 +729,7 @@ func parseFilter() filter {
 		w.True(err == nil, "pocketcasts: title-regex: %v", err)
 		f.title, f.any = re, true
 	}
-	f.after, f.before = opt("published_after"), opt("published_before")
+	f.after, f.before = opt("published-after"), opt("published_before")
 	for _, d := range []string{f.after, f.before} {
 		if d != "" {
 			_, err := time.Parse("2006-01-02", d)
@@ -1110,7 +1110,7 @@ func opArchive(token string, archived bool) {
 	w.True(len(pods) == 1, "pocketcasts: %s takes one podcast", verb)
 	p := pods[0]
 	f := parseFilter()
-	w.True(f.any || truthy(opt("all")), "pocketcasts: refusing to %s every episode by default: add a filter (from-number/to-number, title-regex, published_after/published_before, episodes) or all=true", verb)
+	w.True(f.any || truthy(opt("all")), "pocketcasts: refusing to %s every episode by default: add a filter (from-number/to-number, title-regex, published-after/published_before, episodes) or all=true", verb)
 	m, eps := episodesOf(token, p.UUID)
 	var matched, todo []episode
 	for _, e := range eps {
