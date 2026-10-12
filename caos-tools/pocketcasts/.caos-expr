@@ -1,0 +1,38 @@
+# The `pocketcasts` tool: the std/go worker image (named by locator, at the
+# same caos revision as flake.lock) with worker.go curried onto it, plus the
+# `help` it is described by. `@call` makes each call its own run: without it an
+# identical call would be answered from the result cache, and a library that
+# changed since would read as stale.
+HELP=<<END
+Read and change a Pocket Casts account: subscriptions, folders, and which
+episodes of a podcast are archived. Pocket Casts has no public API; this uses the
+endpoints the official open-source Android app uses, with the account email and
+password from the pocketcasts-email and pocketcasts-password secrets.
+
+The result is plain text, tab-separated where it is a table. A failure is a
+failed run with the reason. A write is read back afterwards and reported as
+confirmed or NOT CONFIRMED. Destructive operations (unsubscribe, delete_folder,
+archive, unarchive) only describe what they would do until apply=true: show the
+user that description and get their go-ahead before repeating the call with it.
+
+@param op One of: list_podcasts, list_folders, search, subscribe, unsubscribe, move_podcast, create_folder, rename_folder, delete_folder, list_episodes, archive, unarchive, selftest (offline check of the protobuf encoder).
+@param [podcast] A podcast: its uuid, or part of its title (must match exactly one subscribed podcast, or exactly one by full title). unsubscribe and move_podcast take several, comma-separated. subscribe takes uuids only.
+@param [folder] A folder: its uuid or name, or none for no folder. list_podcasts: only that folder's podcasts. move_podcast: the destination. subscribe: put the new podcast there. rename_folder, delete_folder: the folder.
+@param [name] create_folder: the new folder's name. rename_folder: its new name.
+@param [color] create_folder: an integer color index (default 0).
+@param [query] search: text to search the Pocket Casts directory for (best effort; the endpoint is unverified).
+@param [with_latest] list_podcasts: true to also fetch each podcast's latest episode date and episode count (one request per podcast; use it to find dormant podcasts).
+@param [from_number] list_episodes, archive, unarchive: lowest episode number to include. Numbers come from the feed if it has them, else are parsed from the title ("#102", "Episode 102", a leading number); see number_regex. Episodes with no number never match a number filter.
+@param [to_number] Highest episode number to include (inclusive).
+@param [number_regex] Regex with one capture group that extracts the episode number from the title, overriding the default parsing.
+@param [title_regex] Only episodes whose title matches this regex (Go syntax, add (?i) for case-insensitive).
+@param [published_after] Only episodes published on or after this date, YYYY-MM-DD.
+@param [published_before] Only episodes published before this date, YYYY-MM-DD.
+@param [only] list_episodes: archived or unarchived.
+@param [episodes] Only these episode uuids, comma-separated.
+@param [all] archive, unarchive: true to select every episode when no filter is given.
+@param [apply] unsubscribe, delete_folder, archive, unarchive: true to do it. Without it the call is a dry run.
+@param [max_rows] list_episodes: rows to print (default 200).
+@call
+END
+curry --base:@@=github:Metta-AI/caos?rev=74d72c8f5a66a9fb81b580033b8aa24242712a76&dir=std/go --worker1:@=worker.go --help=$HELP
