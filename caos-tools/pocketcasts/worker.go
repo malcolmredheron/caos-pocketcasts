@@ -256,6 +256,13 @@ func podcastRec(uuid string, subscribed *bool, folder *string, added *time.Time)
 	return pbBytes(1, m)
 }
 
+// unsubscribeRec removes a podcast from the library. subscribed=false alone is
+// accepted by the server but leaves the podcast listed; is_deleted (2) is what
+// drops it.
+func unsubscribeRec(uuid string) []byte {
+	return pbBytes(1, cat(pbStr(1, uuid), boolW(2, true), boolW(3, false)))
+}
+
 // episodeRec is Record.episode (2) = SyncUserEpisode. Pocket Casts calls an
 // archived episode "deleted" on the wire (isDeleted); the _modified stamp is
 // what the server's last-writer-wins compares.
