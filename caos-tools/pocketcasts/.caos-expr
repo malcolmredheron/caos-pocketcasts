@@ -21,7 +21,7 @@ user that description and get their go-ahead before repeating the call with it.
 @param [name] create_folder: the new folder's name. rename_folder: its new name.
 @param [color] create_folder: an integer color index (default 0).
 @param [query] search: text to search the Pocket Casts directory for (best effort; the endpoint is unverified).
-@param [with_latest] list_podcasts: true to also fetch each podcast's latest episode date and episode count (one request per podcast; use it to find dormant podcasts).
+@param [with-latest] list_podcasts: true to also fetch each podcast's latest episode date and episode count (one request per podcast; use it to find dormant podcasts).
 @param [from_number] list_episodes, archive, unarchive: lowest episode number to include. Numbers come from the feed if it has them, else are parsed from the title ("#102", "Episode 102", a leading number); see number_regex. Episodes with no number never match a number filter.
 @param [to_number] Highest episode number to include (inclusive).
 @param [number_regex] Regex with one capture group that extracts the episode number from the title, overriding the default parsing.
