@@ -1247,6 +1247,20 @@ func opSelftest() {
 	w.True(bad == 0, "pocketcasts: selftest: %d failures\n%s", bad, out.String())
 }
 
+// scrub removes the account's own credentials from a result. Private feeds put
+// the subscriber's email in the podcast title ("private feed for ..."), and
+// caos refuses to store any output that contains a secret value.
+func scrub(s string) string {
+	for _, name := range []string{"pocketcasts-email", "pocketcasts-password"} {
+		b, err := os.ReadFile("/secret/" + name)
+		v := strings.TrimRight(string(b), "\r\n")
+		if err == nil && len(v) >= 4 {
+			s = strings.ReplaceAll(s, v, "[account "+strings.TrimPrefix(name, "pocketcasts-")+"]")
+		}
+	}
+	return s
+}
+
 func main() {
 	w.Main(func() {
 		required("call")
