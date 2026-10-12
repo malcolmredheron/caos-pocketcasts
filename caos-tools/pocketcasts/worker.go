@@ -1227,6 +1227,7 @@ func opSelftest() {
 		{"varint 300", binary.AppendUvarint(nil, 300), "ac02"},
 		{"subscribe", podcastRec("ab", &yes, nil, nil), "0a080a026162" + "1a020801"},
 		{"unsubscribe (empty BoolValue)", podcastRec("ab", &no, nil, nil), "0a060a026162" + "1a00"},
+		{"unsubscribe record", unsubscribeRec("ab"), "0a0a" + "0a026162" + "12020801" + "1a00"},
 		{"folder wrapper", podcastRec("ab", nil, &home, nil), "0a09" + "0a026162" + "3a030a0178"},
 		// uuid "e", podcast_uuid "p", is_deleted true, is_deleted_modified 1
 		{"episode archived", episodeRec("p", "e", true, 1), "120e" + "0a0165" + "120170" + "1a020801" + "22020801"},
