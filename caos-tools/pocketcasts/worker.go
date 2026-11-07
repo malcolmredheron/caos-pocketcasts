@@ -999,7 +999,6 @@ func opSubscribe(token string) {
 	now := time.Now()
 	var recs [][]byte
 	var done []string
-	yes := true
 	for _, u := range strings.Split(required("podcast"), ",") {
 		u = strings.TrimSpace(u)
 		if isURL(u) {
