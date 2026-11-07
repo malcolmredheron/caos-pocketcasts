@@ -1013,11 +1013,11 @@ func opSubscribe(token string) {
 			pf("already subscribed: %s\n", u)
 			continue
 		}
-		var folder *string
+		folder := ""
 		if target != nil {
-			folder = &target.UUID
+			folder = target.UUID
 		}
-		recs = append(recs, podcastRec(u, &yes, folder, &now))
+		recs = append(recs, subscribeRec(u, folder, now))
 		done = append(done, u)
 	}
 	if len(recs) == 0 {
