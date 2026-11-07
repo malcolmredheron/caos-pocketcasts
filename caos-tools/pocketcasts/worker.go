@@ -257,6 +257,17 @@ func podcastRec(uuid string, subscribed *bool, folder *string, added *time.Time)
 	return pbBytes(1, m)
 }
 
+// subscribeRec adds a podcast to the library the way the Android app's
+// PodcastSync does: is_deleted=false and subscribed=true together (subscribed
+// alone is accepted but adds nothing, the mirror of unsubscribeRec), and the
+// folder always present, the home folder when there is none.
+func subscribeRec(uuid, folder string, added time.Time) []byte {
+	if folder == "" {
+		folder = homeFolder
+	}
+	return pbBytes(1, cat(pbStr(1, uuid), boolW(2, false), boolW(3, true), stringW(7, folder), timestamp(9, added)))
+}
+
 // unsubscribeRec removes a podcast from the library. subscribed=false alone is
 // accepted by the server but leaves the podcast listed; is_deleted (2) is what
 // drops it.
@@ -988,7 +999,6 @@ func opSubscribe(token string) {
 	now := time.Now()
 	var recs [][]byte
 	var done []string
-	yes := true
 	for _, u := range strings.Split(required("podcast"), ",") {
 		u = strings.TrimSpace(u)
 		if isURL(u) {
@@ -1002,11 +1012,11 @@ func opSubscribe(token string) {
 			pf("already subscribed: %s\n", u)
 			continue
 		}
-		var folder *string
+		folder := ""
 		if target != nil {
-			folder = &target.UUID
+			folder = target.UUID
 		}
-		recs = append(recs, podcastRec(u, &yes, folder, &now))
+		recs = append(recs, subscribeRec(u, folder, now))
 		done = append(done, u)
 	}
 	if len(recs) == 0 {
@@ -1284,6 +1294,8 @@ func opSelftest() {
 		{"varint 300", binary.AppendUvarint(nil, 300), "ac02"},
 		{"subscribe", podcastRec("ab", &yes, nil, nil), "0a080a026162" + "1a020801"},
 		{"unsubscribe (empty BoolValue)", podcastRec("ab", &no, nil, nil), "0a060a026162" + "1a00"},
+		// uuid, is_deleted false (empty BoolValue), subscribed true, folder "x", date_added epoch
+		{"subscribe record", subscribeRec("ab", "x", time.Unix(0, 0)), "0a15" + "0a026162" + "1200" + "1a020801" + "3a030a0178" + "4a0408001000"},
 		{"unsubscribe record", unsubscribeRec("ab"), "0a0a" + "0a026162" + "12020801" + "1a00"},
 		{"folder wrapper", podcastRec("ab", nil, &home, nil), "0a09" + "0a026162" + "3a030a0178"},
 		// uuid "e", podcast_uuid "p", is_deleted true, is_deleted_modified 1
