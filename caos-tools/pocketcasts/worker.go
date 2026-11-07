@@ -257,6 +257,17 @@ func podcastRec(uuid string, subscribed *bool, folder *string, added *time.Time)
 	return pbBytes(1, m)
 }
 
+// subscribeRec adds a podcast to the library the way the Android app's
+// PodcastSync does: is_deleted=false and subscribed=true together (subscribed
+// alone is accepted but adds nothing, the mirror of unsubscribeRec), and the
+// folder always present, the home folder when there is none.
+func subscribeRec(uuid, folder string, added time.Time) []byte {
+	if folder == "" {
+		folder = homeFolder
+	}
+	return pbBytes(1, cat(pbStr(1, uuid), boolW(2, false), boolW(3, true), stringW(7, folder), timestamp(9, added)))
+}
+
 // unsubscribeRec removes a podcast from the library. subscribed=false alone is
 // accepted by the server but leaves the podcast listed; is_deleted (2) is what
 // drops it.
