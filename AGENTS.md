@@ -13,8 +13,8 @@ Every value is a string. Operations (`op`):
 |---|---|
 | `list_podcasts` | subscriptions with folder and title. `folder` filters. `with-latest=true` adds each podcast's latest episode date and episode count (one request per podcast). |
 | `list_folders` | folders with podcast counts, and how many podcasts have no folder. |
-| `search` | search the Pocket Casts directory (`query`); gives uuids to subscribe with. |
-| `subscribe` | `podcast` = uuid(s), optional `folder`. |
+| `search` | search the Pocket Casts directory (`query`); gives uuids to subscribe with. A feed URL as `query` gives that feed's uuid (private feeds too). |
+| `subscribe` | `podcast` = uuid(s) or feed URL(s), optional `folder`. |
 | `unsubscribe` | `podcast` = uuid or title (several, comma-separated). Dry run unless `apply=true`. |
 | `move_podcast` | `podcast`, `folder` (name, uuid, or `none`). |
 | `create_folder` / `rename_folder` / `delete_folder` | `name`, `folder`. Deleting moves its podcasts to the top level; dry run unless `apply=true`. |

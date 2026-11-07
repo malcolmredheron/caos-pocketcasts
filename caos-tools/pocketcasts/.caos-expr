@@ -16,11 +16,11 @@ archive, unarchive) only describe what they would do until apply=true: show the
 user that description and get their go-ahead before repeating the call with it.
 
 @param op One of: list_podcasts, list_folders, search, subscribe, unsubscribe, move_podcast, create_folder, rename_folder, delete_folder, list_episodes, archive, unarchive, selftest (offline check of the protobuf encoder).
-@param [podcast] A podcast: its uuid, or part of its title (must match exactly one subscribed podcast, or exactly one by full title). unsubscribe and move_podcast take several, comma-separated. subscribe takes uuids only.
+@param [podcast] A podcast: its uuid, or part of its title (must match exactly one subscribed podcast, or exactly one by full title). unsubscribe and move_podcast take several, comma-separated. subscribe takes uuids or feed URLs (private feeds included), comma-separated.
 @param [folder] A folder: its uuid or name, or none for no folder. list_podcasts: only that folder's podcasts. move_podcast: the destination. subscribe: put the new podcast there. rename_folder, delete_folder: the folder.
 @param [name] create_folder: the new folder's name. rename_folder: its new name.
 @param [color] create_folder: an integer color index (default 0).
-@param [query] search: text to search the Pocket Casts directory for (returns up to 50 results with their uuids).
+@param [query] search: text to search the Pocket Casts directory for (returns up to 50 results with their uuids), or a feed URL to look up (a private feed is added to Pocket Casts if it is new).
 @param [with-latest] list_podcasts: true to also fetch each podcast's latest episode date and episode count (one request per podcast; use it to find dormant podcasts).
 @param [from-number] list_episodes, archive, unarchive: lowest episode number to include. Numbers come from the feed if it has them, else are parsed from the title ("#102", "Episode 102", a leading number); see number-regex. Episodes with no number never match a number filter.
 @param [to-number] Highest episode number to include (inclusive).
@@ -35,4 +35,4 @@ user that description and get their go-ahead before repeating the call with it.
 @param [max-rows] list_episodes: rows to print (default 200).
 @call
 END
-curry --base:@@=github:Metta-AI/caos?rev=74d72c8f5a66a9fb81b580033b8aa24242712a76&dir=std/go --worker1:@=worker.go --help=$HELP
+curry --base:@@=github:Metta-AI/caos?rev=877e0103faea88e3e58b7e61804b71fde2ec5464&dir=std/go --worker1:@=worker.go --help=$HELP
